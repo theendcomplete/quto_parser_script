@@ -26,8 +26,12 @@ OptionParser.new do |opts|
   end
 end.parse!
 
-p options
-p ARGV
+if options[:debug]
+  puts 'arguments: '
+  p ARGV
+  puts 'options: '
+  p options
+end
 
 search_result = RequestMaker.new(
   brand = ARGV[0], model = ARGV[1],
