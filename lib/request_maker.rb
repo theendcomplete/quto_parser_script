@@ -19,9 +19,10 @@ class RequestMaker
     @brand = brand
     @model = model
     @headless = params[:headless]
-    @args = params[:chrome_args] || ['--headless', '--window-size=1200x600',
+    @args = params[:chrome_args] || ['--window-size=1200x600',
                                      '--no-gpu ', '--no-sandbox',
-                                     ' --disable-setuid-sandbox', '--dump-dom']
+                                     ' --disable-setuid-sandbox',
+                                     '--dump-dom']
     @proxy = { http: params[:proxy], ssl: params[:proxy] } if params[:proxy]
     @debug = params[:debug]
   end
@@ -34,11 +35,8 @@ class RequestMaker
 
     Webdrivers.logger.level = :DEBUG if @debug
 
-    # browser = Watir::Browser.new(:chrome, proxy: proxy,
-    #                             chromeOptions: { args: @args })
     browser = Watir::Browser.new(:chrome, proxy: @proxy,
                                           chromeOptions: { args: @args })
-    # browser.proxy = @proxy if @proxy
 
     browser.goto(@url)
     browser.element(id: 'pseudo_link_inventory_trade').click
