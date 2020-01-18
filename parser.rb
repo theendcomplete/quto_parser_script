@@ -13,11 +13,22 @@ OptionParser.new do |opts|
   opts.on('-h', '--headless', 'Run in headless mode') do |v|
     options[:headless] = v
   end
+  opts.on('-d', '--debug', 'Enable debug output') do |v|
+    options[:debug] = v
+  end
+  opts.on('-p', '--proxy', 'Specify proxy server') do |v|
+    options[:proxy] = v
+  end
 end.parse!
 
 p options
 p ARGV
 
-search_result = RequestMaker.new(ARGV[0], ARGV[1], options[:headless]).search
+search_result = RequestMaker.new(
+  brand = ARGV[0], model = ARGV[1],
+  headless: options[:headless],
+  proxy: options[:proxy],
+  debug: options[:debug]
+).search
 
 puts search_result

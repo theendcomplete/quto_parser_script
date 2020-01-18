@@ -7,6 +7,6 @@ The script searches available cars with prices and links on `http://quto.ru` web
 - `ruby parser.rb Opel Astra` or `ruby parser.rb BMW X5`
 
 ## Additional options:
-- ruby parser.rb Opel Astra true`
+- ruby parser.rb -h`
 
 
