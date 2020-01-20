@@ -1,4 +1,4 @@
-#Purpose:
+# Purpose:
 The script searches available cars with prices and links on `http://quto.ru` website.
 
 ## How to use:
