@@ -10,7 +10,7 @@ class RequestMaker
   attr_accessor :brand
   attr_accessor :model
 
-  def initialize(brand, model, args = nil)
+  def initialize(brand = nil, model = nil, **params)
     if [brand, model].include? nil
       raise ArgumentError, message: 'NOT ENOUGH PARAMETERS'
     end
@@ -18,14 +18,25 @@ class RequestMaker
     @url = 'https://quto.ru'
     @brand = brand
     @model = model
-    @args = args || ['--headless', '--window-size=1200x600',
-                     '--no-gpu ', '--no-sandbox',
-                     ' --disable-setuid-sandbox', '--dump-dom']
+    @headless = params[:headless]
+    @args = params[:chrome_args] || ['--window-size=1200x600',
+                                     '--no-gpu ', '--no-sandbox',
+                                     ' --disable-setuid-sandbox',
+                                     '--dump-dom']
+    @proxy = { http: params[:proxy], ssl: params[:proxy] } if params[:proxy]
+    @debug = params[:debug]
   end
 
   def search
-    browser = Watir::Browser.new(:chrome,
-                                 chromeOptions: { args: @args })
+    if @headless
+      headless = Headless.new
+      headless.start
+    end
+
+    Webdrivers.logger.level = :DEBUG if @debug
+
+    browser = Watir::Browser.new(:chrome, proxy: @proxy,
+                                          chromeOptions: { args: @args })
 
     browser.goto(@url)
     browser.element(id: 'pseudo_link_inventory_trade').click
@@ -35,5 +46,6 @@ class RequestMaker
 
     puts browser.html
     browser.close
+    headless.destroy if @headless
   end
 end
